@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 //placing user order form frontend
 const placeOrder = async (req,res)=>{
     
-    const frontend_url = "http://localhost:5173"
+    const frontend_url = "http://127.0.0.1:5173"
     
     try {
         const newOrder = new orderModel({
@@ -22,22 +22,24 @@ const placeOrder = async (req,res)=>{
         await userModel.findByIdAndUpdate(req.body.userId,{cartData: {}});
         const line_items = req.body.items.map((item)=>({
             price_data : {
-                currency : "doller",
+                currency : "usd",
                 product_data: {
                     name: item.name
                 },
-                unit_amount:item.price * 100 * 80
+                // unit_amount:item.price * 100 * 80
+                unit_amount:item.price * 100
             },
             quantity : item.quantity
         }))
 
         line_items.push({
             price_data:{
-                currency : "doller",
+                currency : "usd",
                 product_data: {
                     name: "Delivery Charges"
                 },
-                unit_amount: 2 * 100 * 80
+                // unit_amount: 2 * 100 * 80
+                unit_amount: 2 * 100
             },
             quantity :1
         })
